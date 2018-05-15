@@ -1,0 +1,22 @@
+{
+  "name": "node_demo",
+  "version": "1.0.0",
+  "description": "学习node 笔记",
+  "main": "10_fs-readFile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yuanzhiyong123/node_demo.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yuanzhiyong123/node_demo/issues"
+  },
+  "homepage": "https://github.com/yuanzhiyong123/node_demo#readme",
+  "devDependencies": {
+    "chalk": "^2.4.1"
+  }
+}
