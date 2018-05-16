@@ -4,7 +4,8 @@
   "description": "学习node 笔记",
   "main": "10_fs-readFile.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "express": "node ./server/bin/www"
   },
   "repository": {
     "type": "git",
@@ -16,6 +17,14 @@
     "url": "https://github.com/yuanzhiyong123/node_demo/issues"
   },
   "homepage": "https://github.com/yuanzhiyong123/node_demo#readme",
+  "dependencies": {
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.9",
+    "express": "~4.16.0",
+    "http-errors": "~1.6.2",
+    "jade": "~1.11.0",
+    "morgan": "~1.9.0"
+  },
   "devDependencies": {
     "chalk": "^2.4.1"
   }
