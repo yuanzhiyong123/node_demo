@@ -2,10 +2,10 @@ const http = require('http');
 const chalk = require('chalk');
 const path = require('path');
 const fs = require('fs');
+const url = require('url');
 const promisify = require('util').promisify;
 const stat = promisify(fs.stat);
 const files = promisify(fs.readdir);
-
 
 const config = {
     host: '127.0.0.1',
@@ -13,7 +13,7 @@ const config = {
     root: process.cwd()
 }
 const server = http.createServer((req, res) => {
-    const filePath = path.join(config.root, req.url);
+    const filePath = path.join(config.root, url.parse(req.url).pathname);
     res.statusCode = 200;
     stat(filePath).then((stat) => {
         if (stat.isDirectory()) {
@@ -43,6 +43,6 @@ const server = http.createServer((req, res) => {
 
 server.listen(config.port, config.host, () => {
     const addr = `http://${config.host}:${config.port}`
-    console.log(`run at ${chalk.red(addr)}`);
+    console.log(`run at ${chalk.green(addr)}`);
 });
 

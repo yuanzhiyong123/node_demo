@@ -17,7 +17,7 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public')));  //提供静态目录可直接访问
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
