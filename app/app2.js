@@ -20,7 +20,7 @@ const server = http.createServer((req, res) => {
     const pathName = url.parse(req.url).pathname;
     const method = req.method.toLowerCase();
     res.statusCode = 200;
-    res.setHeader("Content-type", "application/json")
+    res.setHeader("Content-type", "text/html")
     res.setHeader("Access-Control-Allow-Origin", "*");
     console.log(method);
     if(method === 'get') {
@@ -64,9 +64,13 @@ const server = http.createServer((req, res) => {
                 // })
                 db.collection("goods"). find({}).toArray(function(err, result) { // 返回集合中所有数据
                     if (err) throw err;
-                    console.log(result);
                     client.close();
-                    res.end(result.toString());
+                    ejs.renderFile('app/views/home.html',{
+                        list: result
+                    }, (err, data) => {
+                        if(err) throw err;
+                        res.end(data);
+                    })
                 });
             })
         }
