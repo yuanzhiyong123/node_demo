@@ -14,6 +14,7 @@ const config = {
 }
 const server = http.createServer((req, res) => {
     const filePath = path.join(config.root, url.parse(req.url).pathname);
+    console.log(filePath);
     res.statusCode = 200;
     stat(filePath).then((stat) => {
         if (stat.isDirectory()) {
@@ -32,12 +33,6 @@ const server = http.createServer((req, res) => {
         console.log(err);
         res.setHeader('Content-type', 'text/plain');
         res.end(`${filePath} is no a directory or a file`);
-    });
-    fs.stat(filePath, (err, stat) => {
-        if (err) {
-
-        }
-
     });
 });
 
