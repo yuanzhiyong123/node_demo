@@ -1,9 +1,11 @@
 const express = require('express');
 const MongoClient = require('mongodb').MongoClient;
+const objectId = require('mongodb').ObjectId;
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
-var bodyParser = require('body-parser');
-
+const bodyParser = require('body-parser');
+const Db = require('./modules/db.js');
+const DB = new Db();
 
 const app = express();
 
@@ -14,8 +16,9 @@ app.use(cookieParser());
 app.use(session({
     secret: 'keyboard cat',  //随意字符串  用于session签名
     resave: false,
-    saveUninitialized: true
-    // cookie: { secure: true }
+    saveUninitialized: true,
+    cookie: { maxAge: 1000*60*10 },
+    rolling:true  //每次执行操作 重置cookie过期时间
 }))
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -23,7 +26,7 @@ app.use(bodyParser.json());
 const dbUrl = 'mongodb://127.0.0.1:27017';
 
 app.use((req, res, next) => {
-    if(req.url === '/doLogin' ||req.url === '/login' || req.url ==='/favicon.ico') {
+    if(req.url === '/doLogin' ||req.url === '/login' || req.url ==='/favicon.ico'|| req.url === '/login2') {
         next();
     }else {
         if(req.session.userInfo && req.session.userInfo.username !='') {
@@ -43,48 +46,53 @@ app.get('/login', (req, res) => {
 });
 
 app.get('/add', (req, res) => {
-    res.render('edit');
+    res.render('add');
+});
+
+app.get('/edit', (req, res) => {
+    const query = req.query;
+    DB.find('demo','product',{"_id":new objectId(query.id)},function(data) {
+        res.render('edit',{data:data[0]}); 
+    });
+});
+
+app.get('/delete', (req, res) => {
+    const query = req.query;
+    DB.delete('demo','product',{"_id":new objectId(query.id)},function(data) {
+        res.redirect('/productList');
+    });
 });
 
 app.get('/productList', (req, res) => {
-    MongoClient.connect(dbUrl, (err, client) => {
-        if(err) {
-            console.log(err);
-            return;
-        }
-        const db = client.db('demo');
-        db.collection('product').find({}).toArray((err, data) => {
-            if(err) {
-                console.log(err);
-            }
-            res.render('index', {
-                list: data
-            });
-            client.close();
+    DB.find('demo','product',{},function(data) {
+        res.render('index', {
+            list: data
         });
     });
 });
 
 app.post('/doLogin', (req, res) => {
-    MongoClient.connect(dbUrl, (err, client) => {
-        if(err) {
-            console.log(err);
-            return;
+    DB.find('demo','userInfo',req.body,function(data) {
+        if(data.length > 0) {
+            req.session.userInfo=req.body;
+            res.redirect('/productList');
+        }else{
+            res.send("<script>alert('登陆失败'); location.href='/login'</script>");
         }
-        const db = client.db('demo');
-        db.collection('userInfo').find(req.body).toArray((err, data) => {
-            if(err) {
-                console.log(err);
-                return;
-            }
-            if(data.length > 0) {
-                req.session.userInfo=req.body;
-                res.redirect('/productList');
-            }else{
-                res.send("<script>alert('登陆失败'); location.href='/login'</script>");
-            }
-            client.close();
-        });
+    });
+});
+
+app.post('/doAdd', (req, res) => {
+    DB.insert('demo','product',req.body,function(data) {
+        res.redirect('/productList');
+    });
+});
+
+app.post('/doEdit', (req, res) => {
+    const query = req.query;
+    console.log(req.body);
+    DB.update('demo','product',{"_id":new objectId(query.id)},req.body,function(data) {
+        res.redirect('/productList');
     });
 });
 
@@ -95,9 +103,18 @@ app.get('/loginOut', (req, res) => {
     res.redirect('/login');
 });
 
+app.get('/login2', (req, res) => {
+    req.session.wxid = 'oJ8nzwc2EOS07bnaHAfpqVhHC26k'; //sesstion 写入openid
+    res.json({
+        result: true
+    });
+});
+
 app.use((req, res, next) => {
     res.send('404');
 });
+
+
 
 app.listen(3001, '127.0.0.1', () => {
     console.log(`server run at 127.0.0.1:3001`);

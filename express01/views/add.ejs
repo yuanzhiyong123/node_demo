@@ -33,17 +33,17 @@
                 </div>
                 <div class="panel-body">
                     <div class="table-responsive input-form">
-                        <form action="/doEdit?id=<%=data._id%>" method="post">
+                        <form action="/doAdd" method="post">
                             <ul>
-                                <li>  商品名称: <input type="text" value="<%=data.title%>" name="title"/></li>
+                                <li>  商品名称: <input type="text" name="title"/></li>
 
-                                <li>  商品图片: <input type="file" value="<%=data.img%>" name="img"/></li>
-                                <li>  商品价格: <input type="text" value="<%=data.price%>" name="price"/></li>
-                                <li>  商品邮费: <input type="text" value="<%=data.fee%>" name="fee"/></li>
+                                <li>  商品图片: <input type="file" name="img"/></li>
+                                <li>  商品价格: <input type="text" name="price"/></li>
+                                <li>  商品邮费: <input type="text" name="fee"/></li>
 
                                 <li>
                                     商品描述:
-                                    <textarea name="desc" id="" cols="60" rows="8"><%=data.desc%></textarea>
+                                    <textarea name="desc" id="" cols="60" rows="8"></textarea>
                                 </li>
 
                                 <li>
@@ -52,8 +52,6 @@
                                 </li>
 
                             </ul>
-
-
                         </form>
                     </div>
                 </div>

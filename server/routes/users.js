@@ -11,21 +11,10 @@ router.get('/', function (req, res, next) {
   res.status(200);
   res.header("Access-Control-Allow-Origin", "*");
   var path2 = path.join(__dirname, '../api/index.json');
-  MongoClient.connect(dbUrl, (err, client) => {
-    if (err) { throw err }
-    var db = client.db('demos');
-    db.collection('goods').find({}).toArray((err, data) => {
-      if (err) {
-        console.log(err);
-        return;
-      }
-      var obj = {
-        data
-      }
-      console.log(data);
-      res.json(obj);
+  // req.session.wxid = 'oJ8nzwc2EOS07bnaHAfpqVhHC26k'; //sesstion 写入openid
+    res.json({
+        result: true
     });
-  })
 });
 
 module.exports = router;
