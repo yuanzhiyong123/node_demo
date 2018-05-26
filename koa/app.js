@@ -5,6 +5,7 @@ const app = new Koa();
 
 router.get('/',async (ctx) => {
     ctx.body='hello';
+    console.log(11);
 });
 
 router.get('/new/:id', async (ctx) => {
