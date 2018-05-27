@@ -5,7 +5,7 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const bodyParser = require('body-parser');
 const Db = require('./modules/db.js');
-const DB = new Db();
+const DB = new Db();  //封装的mongodb 方法
 
 const app = express();
 
