@@ -17,6 +17,7 @@ app.use(async (ctx, next) => {
         name: 'yzy'
     }
     await next();
+    
 });
 
 router.get('/',async (ctx) => {
