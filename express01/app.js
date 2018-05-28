@@ -17,8 +17,8 @@ app.use(session({
     secret: 'keyboard cat',  //随意字符串  用于session签名
     resave: false,
     saveUninitialized: true,
-    cookie: { maxAge: 1000*60*10 },
-    rolling:true  //每次执行操作 重置cookie过期时间
+    cookie: { maxAge: 1000 * 60 * 10 },
+    rolling: true  //每次执行操作 重置cookie过期时间
 }))
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -26,12 +26,12 @@ app.use(bodyParser.json());
 const dbUrl = 'mongodb://127.0.0.1:27017';
 
 app.use((req, res, next) => {
-    if(req.url === '/doLogin' ||req.url === '/login' || req.url ==='/favicon.ico'|| req.url === '/login2') {
+    if (req.url === '/doLogin' || req.url === '/login' || req.url === '/favicon.ico' || req.url === '/login2') {
         next();
-    }else {
-        if(req.session.userInfo && req.session.userInfo.username !='') {
+    } else {
+        if (req.session.userInfo && req.session.userInfo.username != '') {
             next();
-        }else {
+        } else {
             res.redirect('/login');
         }
     }
@@ -51,20 +51,20 @@ app.get('/add', (req, res) => {
 
 app.get('/edit', (req, res) => {
     const query = req.query;
-    DB.find('demo','product',{"_id":new objectId(query.id)},function(data) {
-        res.render('edit',{data:data[0]}); 
+    DB.find('demo', 'product', { "_id": new objectId(query.id) }, function (data) {
+        res.render('edit', { data: data[0] });
     });
 });
 
 app.get('/delete', (req, res) => {
     const query = req.query;
-    DB.delete('demo','product',{"_id":new objectId(query.id)},function(data) {
+    DB.delete('demo', 'product', { "_id": new objectId(query.id) }, function (data) {
         res.redirect('/productList');
     });
 });
 
 app.get('/productList', (req, res) => {
-    DB.find('demo','product',{},function(data) {
+    DB.find('demo', 'product', {}, function (data) {
         res.render('index', {
             list: data
         });
@@ -72,18 +72,18 @@ app.get('/productList', (req, res) => {
 });
 
 app.post('/doLogin', (req, res) => {
-    DB.find('demo','userInfo',req.body,function(data) {
-        if(data.length > 0) {
-            req.session.userInfo=req.body;
+    DB.find('demo', 'userInfo', req.body, function (data) {
+        if (data.length > 0) {
+            req.session.userInfo = req.body;
             res.redirect('/productList');
-        }else{
+        } else {
             res.send("<script>alert('登陆失败'); location.href='/login'</script>");
         }
     });
 });
 
 app.post('/doAdd', (req, res) => {
-    DB.insert('demo','product',req.body,function(data) {
+    DB.insert('demo', 'product', req.body, function (data) {
         res.redirect('/productList');
     });
 });
@@ -91,7 +91,7 @@ app.post('/doAdd', (req, res) => {
 app.post('/doEdit', (req, res) => {
     const query = req.query;
     console.log(req.body);
-    DB.update('demo','product',{"_id":new objectId(query.id)},req.body,function(data) {
+    DB.update('demo', 'product', { "_id": new objectId(query.id) }, req.body, function (data) {
         res.redirect('/productList');
     });
 });
@@ -107,6 +107,20 @@ app.get('/login2', (req, res) => {
     req.session.wxid = 'oJ8nzwc2EOS07bnaHAfpqVhHC26k'; //sesstion 写入openid
     res.json({
         result: true
+    });
+});
+
+app.get('/test', (req, res) => {
+    MongoClient.connect('mongodb://127.0.0.1:27017', (err, client) => {
+        if (err) {
+            console.log(err);
+            return;
+        }
+        const db = client.db('demos');
+        var a = db.collection('goods').findOneAndUpdate({ "name": "xiaohong" }, { $set: { "obj.name": "zhi" } }, (err, data) => {
+            console.log(data);
+        })
+        console.log(a);
     });
 });
 
