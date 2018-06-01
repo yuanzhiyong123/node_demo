@@ -116,8 +116,10 @@ app.get('/test', (req, res) => {
             console.log(err);
             return;
         }
-        const db = client.db('demos');
-        var a = db.collection('goods').findOneAndUpdate({ "name": "xiaohong" }, { $set: { "obj.name": "zhi" } }, (err, data) => {
+        const db = client.db('test');
+        var a = db.collection('test').findOneAndUpdate({ "name": "xiaoming666" }, { $push: {
+            "list":{"name":'hello',"_id":new objectId()}
+        } }, (err, data) => {
             console.log(data);
         })
         console.log(a);

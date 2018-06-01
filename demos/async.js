@@ -9,4 +9,5 @@ async function show() {
     console.log(data);
 }
 
-show();
+// show();
+console.log(show())
