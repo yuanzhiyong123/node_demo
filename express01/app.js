@@ -123,6 +123,7 @@ app.get('/test', (req, res) => {
             console.log(data);
         })
         console.log(a);
+        
     });
 });
 
